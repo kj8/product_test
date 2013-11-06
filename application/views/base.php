@@ -16,7 +16,6 @@
 				<ul class="nav navbar-nav">
 					<li class="<?php echo ($activeMenu == 'product/index') ? 'active' : ''; ?>"><a href="<?php echo URL::site('product'); ?>"><?php echo __('Products list'); ?></a></li>
 					<li class="<?php echo ($activeMenu == 'attribute/index') ? 'active' : ''; ?>"><a href="<?php echo URL::site('attribute'); ?>"><?php echo __('Attributes list'); ?></a></li>
-					<li class="<?php echo ($activeMenu == 'value/add') ? 'active' : ''; ?>"><a href="<?php echo URL::site('value/add'); ?>"><?php echo __('Add value'); ?></a></li>
 				</ul>
 			</div>
 		</div>
