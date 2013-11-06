@@ -26,4 +26,6 @@ return array(
 	'Attribute deleted' => 'Atrybut został usunięty',
 	'Attribute does not exists' => 'Atrybut nie istnieje',
 	'Attribute changed' => 'Atrybut zmieniony',
+	'Search' => 'Szukaj',
+	'Search products' => 'Szukaj produktów',
 );
