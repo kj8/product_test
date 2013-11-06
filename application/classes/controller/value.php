@@ -10,7 +10,7 @@ class Controller_Value extends Controller_Frontend {
 			DB::insert('product_attribute_value', array('value', 'id_attribute'))->values(array($_POST['value'], $_POST['id_attribute']))->execute();
 
 			$this->addMessage(__('Value added'), Message::TYPE_SUCCESS);
-			$this->request->redirect('value/add');
+			$this->request->redirect('value');
 		}
 
 		$_attributes = DB::select()->from('product_attribute')->execute()->as_array();

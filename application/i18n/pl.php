@@ -20,4 +20,9 @@ return array(
 	'Attribute name' => 'Nazwa atrybutu',
 	'Attribute' => 'Atrybut',
 	'Save' => 'Zapisz',
+	'Delete' => 'Usuń',
+	'Product deleted' => 'Produkt został usunięty',
+	'Product does not exists' => 'Produkt nie istnieje',
+	'Attribute deleted' => 'Atrybut został usunięty',
+	'Attribute does not exists' => 'Atrybut nie istnieje',
 );

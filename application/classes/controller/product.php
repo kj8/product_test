@@ -47,7 +47,7 @@ class Controller_Product extends Controller_Frontend {
 			}
 
 			$this->addMessage(__('Product added'), Message::TYPE_SUCCESS);
-			$this->request->redirect('product/add');
+			$this->request->redirect('product');
 		}
 
 		if ($_POST) {
@@ -120,6 +120,21 @@ class Controller_Product extends Controller_Frontend {
 				)
 				->set('pageName', __('Edit product'))
 		;
+	}
+	
+	public function action_delete() {
+		$id_product = (int) $this->request->param('id');
+		
+		$product = DB::select()->from('product')->where('id', '=', $id_product)->execute()->current();
+		if ($product) {
+			DB::delete('product')->where('id', '=', $id_product)->execute();
+			
+			$this->addMessage(__('Product deleted'), Message::TYPE_SUCCESS);
+		} else {
+			$this->addMessage(__('Product does not exists'), Message::TYPE_WARNING);
+		}
+		
+		$this->request->redirect('product');
 	}
 
 	private function getAtributes() {

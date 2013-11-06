@@ -30,13 +30,17 @@
 
 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
-		<a class="btn btn-default" id="add-attribute" href="#"><?php echo __('Dodaj atrybut'); ?></a>
+		<a class="btn btn-default" id="add-attribute" href="#"><?php echo __('Add attribute'); ?></a>
     </div>
 </div>
 
 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
 		<?php echo Form::submit(null, __('Save'), array('class' => 'btn btn-primary')); ?>
+		
+		<?php if (!empty($data['id'])): ?>
+			<a class="delete-item btn btn-danger" href="<?php echo URL::site('product/delete/' . $data['id']); ?>"><?php echo __('Delete'); ?></a>
+		<?php endif; ?>
     </div>
 </div>
 

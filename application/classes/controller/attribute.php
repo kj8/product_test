@@ -17,11 +17,23 @@ class Controller_Attribute extends Controller_Frontend {
 
 	public function action_add() {
 
+		if ($_POST && !empty($_POST['value'])) {
+			$_POST['value'] = array_filter($_POST['value']);
+			$_POST['value'] = array_unique($_POST['value']);
+		}
+
 		if ($_POST && !empty($_POST['name'])) {
-			DB::insert('product_attribute', array('name'))->values(array($_POST['name']))->execute();
+			list($id_attribute) = DB::insert('product_attribute', array('name'))->values(array($_POST['name']))->execute();
+
+			if (!empty($_POST['value'])) {
+				foreach ($_POST['value'] as $k => $v) {
+					DB::insert('product_attribute_value', array('id_attribute', 'value'))
+							->values(array($id_attribute, $v))->execute();
+				}
+			}
 
 			$this->addMessage(__('Attribute added'), Message::TYPE_SUCCESS);
-			$this->request->redirect('attribute/add');
+			$this->request->redirect('attribute');
 		}
 
 		if ($_POST) {
@@ -49,17 +61,59 @@ class Controller_Attribute extends Controller_Frontend {
 			$this->request->redirect('attribute');
 		}
 
+		if ($_POST && !empty($_POST['value'])) {
+			$_POST['value'] = array_filter($_POST['value']);
+			$_POST['value'] = array_unique($_POST['value']);
+		}
+
 		if ($_POST && !empty($_POST['name'])) {
 			DB::update('product_attribute')->set(array('name' => $_POST['name']))->where('id', '=', $id_attribute)->execute();
 
+			if (!empty($_POST['value'])) {
+
+				DB::delete('product_attribute_value')
+						->where('id_attribute', '=', $id_attribute)
+						->where('id', 'NOT IN', array_keys($_POST['value']))
+						->execute();
+
+				$_valuesIDs = DB::select('id')->from('product_attribute_value')->where('id_attribute', '=', $id_attribute)->execute();
+				$valuesIDs = array();
+				foreach ($_valuesIDs as $k => $v) {
+					$valuesIDs[] = $v['id'];
+				}
+
+				foreach ($_POST['value'] as $k => $v) {
+					if (in_array($k, $valuesIDs)) {
+						DB::update('product_attribute_value')
+								->set(array('value' => $v))
+								->where('id', '=', $k)
+								->where('id_attribute', '=', $id_attribute)
+								->execute();
+					} else {
+						DB::insert('product_attribute_value', array('id_attribute', 'value'))
+								->values(array($id_attribute, $v))->execute();
+					}
+				}
+			} else {
+				DB::delete('product_attribute_value')
+						->where('id_attribute', '=', $id_attribute)
+						->execute();
+			}
+
 			$this->addMessage(__('Attribute changed'), Message::TYPE_SUCCESS);
-			$this->request->redirect('attribute/edit');
+			$this->request->redirect('attribute');
 		}
 
 		if ($_POST) {
 			$data = $_POST;
 		} else {
 			$data = $attribute;
+
+			$value = DB::select()->from('product_attribute_value')->where('id_attribute', '=', $id_attribute)->execute()->as_array();
+			$data['value'] = array();
+			foreach ($value as $k => $v) {
+				$data['value'][$v['id']] = $v['value'];
+			}
 		}
 
 		$this->template
@@ -68,6 +122,21 @@ class Controller_Attribute extends Controller_Frontend {
 				)
 				->set('pageName', __('Edit attribute'))
 		;
+	}
+
+	public function action_delete() {
+		$id_attribute = (int) $this->request->param('id');
+
+		$attribute = DB::select()->from('product_attribute')->where('id', '=', $id_attribute)->execute()->current();
+		if ($attribute) {
+			DB::delete('product_attribute')->where('id', '=', $id_attribute)->execute();
+
+			$this->addMessage(__('Attribute deleted'), Message::TYPE_SUCCESS);
+		} else {
+			$this->addMessage(__('Attribute does not exists'), Message::TYPE_WARNING);
+		}
+
+		$this->request->redirect('attribute');
 	}
 
 	private function getAtributes() {
@@ -87,14 +156,13 @@ class Controller_Attribute extends Controller_Frontend {
 				$attributes[$id] = $a;
 				unset($attributes[$id]['vid'], $attributes[$id]['value']);
 			}
-			
+
 			if ($a['vid']) {
 				$attributes[$id]['values'][] = array(
 					'id' => $a['vid'],
 					'value' => $a['value'],
 				);
 			}
-
 		}
 
 		return $attributes;
