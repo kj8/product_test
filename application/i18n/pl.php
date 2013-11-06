@@ -25,4 +25,5 @@ return array(
 	'Product does not exists' => 'Produkt nie istnieje',
 	'Attribute deleted' => 'Atrybut został usunięty',
 	'Attribute does not exists' => 'Atrybut nie istnieje',
+	'Attribute changed' => 'Atrybut zmieniony',
 );
