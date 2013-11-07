@@ -17,12 +17,8 @@
 	</li>
 
 	<?php for ($i = 1; $i <= $total_pages; $i++): ?>
-		<li>
-			<?php if ($i == $current_page): ?>
-				<a href="<?php echo HTML::chars($page->url($i)) ?>"><strong><?php echo $i ?></strong></a>
-			<?php else: ?>
-				<a href="<?php echo HTML::chars($page->url($i)) ?>"><?php echo $i ?></a>
-			<?php endif; ?>
+		<li class="<?php echo ($i == $current_page) ? 'active' : ''; ?>">
+			<a href="<?php echo HTML::chars($page->url($i)) ?>"><?php echo $i ?></a>
 		</li>
 	<?php endfor; ?>
 
