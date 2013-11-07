@@ -1,5 +1,7 @@
+<hr>
 <div class="row">
 	<div class="col-sm-3" id="search-attributes">
+		<?php echo Form::open('search'); ?>
 		<ul class="list-unstyled">
 			<?php foreach ($attributes as $a): ?>
 				<li class="panel panel-primary">
@@ -11,8 +13,8 @@
 							<?php foreach ($a['values'] as $a): ?>
 								<li>
 									<label>
-										<?php echo Form::checkbox(null, $a['id']); ?>
-										<?php echo HTML::chars($a['value']); ?>
+										<?php echo Form::checkbox('value[]', $a['id'], in_array($a['id'], $values)); ?>
+										<a href="<?php echo URL::site('search'); ?>"><?php echo HTML::chars($a['value']); ?></a>
 									</label>
 								</li>
 							<?php endforeach; ?>
@@ -21,18 +23,33 @@
 				</li>
 			<?php endforeach; ?>
 		</ul>
+		<?php echo Form::submit(null, __('Search'), array('class' => 'btn btn-primary btn-block')); ?>
+		<?php echo Form::close(); ?>
 	</div>
 	<div class="col-sm-9">
-		col-sm-9
-	</div>
-</div>
+		<div class="panel panel-primary">
+			<div class="panel-heading panel-title">
+				<?php echo (count($products)) ? __('Number of results') . ': ' . count($products) : __('No results'); ?>
+			</div>
+		</div>
 
-
-<div class="panel panel-default">
-	<div class="panel-heading">
-		<h3 class="panel-title">Panel title</h3>
-	</div>
-	<div class="panel-body">
-		Panel content
+		<ul class="list-unstyled">
+			<?php foreach ($products as $p): ?>
+				<li class="panel panel-primary">
+					<div class="panel-heading">
+						<span class="panel-title"><?php echo HTML::chars($p['name']); ?></span>
+					</div>
+					<ul class="list-unstyled panel-body">
+						<?php if ($p['attributes']): ?>
+							<?php foreach ($p['attributes'] as $a): ?>
+								<li>
+									<?php echo HTML::chars($a['name'] . ': ' . $a['value']); ?>
+								</li>
+							<?php endforeach; ?>
+						<?php endif; ?>
+					</ul>
+				</li>
+			<?php endforeach; ?>
+		</ul>
 	</div>
 </div>

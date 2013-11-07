@@ -28,4 +28,6 @@ return array(
 	'Attribute changed' => 'Atrybut zmieniony',
 	'Search' => 'Szukaj',
 	'Search products' => 'Szukaj produktów',
+	'Number of results' => 'Ilość wyników',
+	'No results' => 'Brak wyników',
 );

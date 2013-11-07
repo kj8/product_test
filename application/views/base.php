@@ -27,5 +27,11 @@
 
 			<?php echo $content; ?>
 		</div>
+		<div class="footer">
+			<hr>
+			<div class="container">
+
+			</div>
+		</div>
 	</body>
 </html>

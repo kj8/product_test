@@ -43,12 +43,12 @@
         });
     });
 
-    $(document).ready(function() {
-        var searchAttributes = $('#search-attributes');
-        if (searchAttributes.length) {
-            searchAttributes.on('click', 'input', function(ev) {
-                console.log($(this).val());
-            });
-        }
-    });
+//    $(document).ready(function() {
+//        var searchAttributes = $('#search-attributes');
+//        if (searchAttributes.length) {
+//            searchAttributes.on('click', 'input', function(ev) {
+//                console.log($(this).val());
+//            });
+//        }
+//    });
 })(window, document, jQuery);
