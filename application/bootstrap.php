@@ -95,7 +95,7 @@ Kohana::modules(array(
  * Set the routes. Each route must have a minimum of a name, a URI and a set of
  * defaults for the URI.
  */
-Route::set('search', 'search(/<values>(/<id>))', array('values' => 'index|(\d+(,\d+)*)?', 'id' => '.'))
+Route::set('search', 'search(/<values>(/<id>))(-p<page>)', array('values' => 'index|(\d+(,\d+)*)?', 'id' => '.', 'page' => '\d+'))
 	->defaults(array(
 		'controller' => 'search',
 		'action'     => 'index',

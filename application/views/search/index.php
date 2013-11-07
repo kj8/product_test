@@ -39,7 +39,13 @@
 	<div class="col-sm-9">
 		<div class="panel panel-primary">
 			<div class="panel-heading panel-title">
-				<?php echo (count($products)) ? __('Number of results') . ': ' . count($products) : __('No results'); ?>
+				<?php if ($pagination->total_items): ?>
+					<?php echo __('Number of results') . ': ' . $pagination->total_items; ?>
+				<br>
+				<?php echo __('Page :page from :pages', array(':page' => $pagination->current_page, ':pages' => $pagination->total_pages)); ?>
+				<?php else: ?>
+					<?php echo __('No results'); ?>
+				<?php endif; ?>
 			</div>
 		</div>
 
@@ -61,5 +67,7 @@
 				</li>
 			<?php endforeach; ?>
 		</ul>
+
+		<?php echo $pagination; ?>
 	</div>
 </div>

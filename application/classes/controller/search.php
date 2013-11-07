@@ -24,7 +24,15 @@ class Controller_Search extends Controller_Frontend {
 
 		$this->template->set('pageName', __('Products list'));
 
-		$products = $this->getProducts($values);
+		$page = (int) $this->request->param('page');
+
+		$productsCount = $this->getProducts($values);
+
+		$pagination = Pagination::factory(array(
+					'total_items' => $productsCount,
+		));
+		$products = $this->getProducts($values, $pagination->items_per_page, $pagination->offset);
+
 		$attributes = $this->getAtributes();
 
 		$this->template
@@ -32,6 +40,7 @@ class Controller_Search extends Controller_Frontend {
 						->set('products', $products)
 						->set('values', $values)
 						->set('attributes', $attributes)
+						->set('pagination', $pagination)
 				)
 				->set('pageName', __('Search products'))
 		;
@@ -88,9 +97,16 @@ class Controller_Search extends Controller_Frontend {
 		return $attributes;
 	}
 
-	private function getProducts(array $values) {
-		$products = DB::select('p.*')
-				->from(array('product', 'p'));
+	private function getProducts(array $values, $limit = 0, $offset = 0) {
+		$limit = (int) $limit;
+		$offset = (int) $offset;
+
+		$select = 'p.*';
+		if (!$limit) {
+			$select = DB::expr('COUNT(DISTINCT p.id) as `num`');
+		}
+
+		$products = DB::select($select)->from(array('product', 'p'));
 
 		if ($values) {
 			$groupedValues = $this->getGroupedValues();
@@ -114,19 +130,25 @@ class Controller_Search extends Controller_Frontend {
 			}
 		}
 
-		$products = $products->group_by('p.id')->execute()->as_array();
+		if ($limit) {
+			$products = $products->group_by('p.id')->limit($limit)->offset($offset);
+			$products = $products->execute()->as_array();
 
-		foreach ($products as $k => $v) {
-			$products[$k]['attributes'] = DB::select()
-					->from(array('product_attribute', 'a'))
-					->join(array('product_attribute_value', 'v'))
-					->on('v.id_attribute', '=', 'a.id')
-					->join(array('product_product2attribute_value', 'p2v'))
-					->on('p2v.id_value', '=', 'v.id')
-					->where('p2v.id_product', '=', $v['id'])
-					->execute()
-					->as_array();
+			foreach ($products as $k => $v) {
+				$products[$k]['attributes'] = DB::select()
+						->from(array('product_attribute', 'a'))
+						->join(array('product_attribute_value', 'v'))
+						->on('v.id_attribute', '=', 'a.id')
+						->join(array('product_product2attribute_value', 'p2v'))
+						->on('p2v.id_value', '=', 'v.id')
+						->where('p2v.id_product', '=', $v['id'])
+						->execute()
+						->as_array();
+			}
+		} else {
+			$products = $products->execute()->get('num');
 		}
+
 
 		return $products;
 	}

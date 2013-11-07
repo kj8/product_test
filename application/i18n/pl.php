@@ -30,4 +30,9 @@ return array(
 	'Search products' => 'Szukaj produktów',
 	'Number of results' => 'Ilość wyników',
 	'No results' => 'Brak wyników',
+	'Page :page from :pages' => 'Strona :page z :pages',
+	'First' => 'Pierwsza',
+	'Last' => 'Ostatnia',
+	'Previous' => 'Poprzednia',
+	'Next' => 'Następna',
 );
