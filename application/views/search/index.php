@@ -13,8 +13,18 @@
 							<?php foreach ($a['values'] as $a): ?>
 								<li>
 									<label>
-										<?php echo Form::checkbox('value[]', $a['id'], in_array($a['id'], $values)); ?>
-										<a href="<?php echo URL::site('search'); ?>"><?php echo HTML::chars($a['value']); ?></a>
+										<?php
+										$val = array_unique(array_merge($values, array($a['id'])));
+										$checked = in_array($a['id'], $values);
+										if ($checked) {
+											$key = array_search($a['id'], $values);
+											if ($key !== false) {
+												unset($val[$key]);
+											}
+										}
+										?>
+										<?php echo Form::checkbox('value[]', $a['id'], $checked); ?>
+										<a href="<?php echo URL::site('search/' . implode(',', $val)); ?>"><?php echo HTML::chars($a['value']); ?></a>
 									</label>
 								</li>
 							<?php endforeach; ?>

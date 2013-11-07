@@ -111,7 +111,6 @@ class Controller_Search extends Controller_Frontend {
 						$attributesNotIncluded[] = $k;
 					}
 				}
-
 			}
 		}
 
